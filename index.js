@@ -24,12 +24,9 @@ router.get('/blockNumber',async ctx=> {
     
 })
 
-router.get('/test', async ctx => {
+router.get('/transactionsHistory/:myAddress', async ctx => {
     try {
-        // let balance =  await web3.eth.getBalance('0x85109F11A7E1385ee826FbF5dA97bB97dba0D76f')  
-        // ctx.body = web3.utils.fromWei(balance, 'ether')
-        // ctx.body = await web3.eth.getTransactionCount("0x85109F11A7E1385ee826FbF5dA97bB97dba0D76f")
-        await getTransactionsByAccount('0x1BEbF732463cBEca54f6aFac1cE8bbe2aD124be1')
+        ctx.body = await getTransactionsByAccount(ctx.params.myAddress)
     } catch (er) {
         console.log(er);       
     }
@@ -40,39 +37,14 @@ app.listen(port, () => {
     console.log(`listening on port ${port} ...`)
     console.log(chalk.yellow(`http://localhost:${port}`))
 })
-async function getTransactionsByAccount(myaccount, startBlockNumber, endBlockNumber) {
-    let blockNumber = await web3.eth.getBlockNumber()
-    if (endBlockNumber == null) {
-      endBlockNumber = blockNumber;
-      console.log("Using endBlockNumber: " + endBlockNumber);
-    }
-    if (startBlockNumber == null) {
-      startBlockNumber = blockNumber - 5000;
-      console.log("Using startBlockNumber: " + startBlockNumber);
-    }
-    console.log("Searching for transactions to/from account \"" + myaccount + "\" within blocks "  + startBlockNumber + " and " + endBlockNumber);
-  
-    for (var i = startBlockNumber; i <= endBlockNumber; i++) {
-        console.log('i ====>', i);
-        
-      var block = await web3.eth.getBlock(i, true);
-      if (block != null && block.transactions != null) {
-        block.transactions.forEach( function(e) {
-          if (myaccount == "*" || myaccount == e.from || myaccount == e.to) {
-            console.log("  tx hash          : " + e.hash + "\n"
-              + "   nonce           : " + e.nonce + "\n"
-              + "   blockHash       : " + e.blockHash + "\n"
-              + "   blockNumber     : " + e.blockNumber + "\n"
-              + "   transactionIndex: " + e.transactionIndex + "\n"
-              + "   from            : " + e.from + "\n" 
-              + "   to              : " + e.to + "\n"
-              + "   value           : " + e.value + "\n"
-              + "   time            : " + block.timestamp + " " + new Date(block.timestamp * 1000).toGMTString() + "\n"
-              + "   gasPrice        : " + e.gasPrice + "\n"
-              + "   gas             : " + e.gas + "\n"
-              + "   input           : " + e.input);
-          }
-        })
-      }
-    }
+async function getTransactionsByAccount(myaccount) {
+    let endBlockNumber = await web3.eth.getBlockNumber()
+    let startBlockNumber = endBlockNumber - 1000;
+    let result = await Promise.all(Array.from({length: endBlockNumber-(startBlockNumber-1)}, (_, k) => startBlockNumber + k).map(async value => {
+        var block =  await web3.eth.getBlock(value, true);
+        if (block != null && block.transactions != null) {
+            return block.transactions.filter( e => myaccount == "*" || myaccount == e.from || myaccount == e.to)
+        }
+    }))
+    return result.filter(String)
   }
