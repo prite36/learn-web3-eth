@@ -41,7 +41,7 @@ app.use(cors())
 app.use(router.routes())
 app.listen(port, () => {
     console.log(`listening on port ${port} ...`)
-    console.log(chalk.yellow(`http://localhost:${port}`))
+    console.log(chalk.yellow(process.env.HOST ||`http://localhost:${port}`))
 })
 
 const getTransactionsByAccount = async (myaccount) => {
