@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./node_modules/.bin/babel-node index.js", 
+    "start": "./node_modules/.bin/babel-node index.js",
     "dev": "nodemon --exec babel-node index"
   },
   "author": "",
@@ -17,6 +17,7 @@
     "@babel/preset-env": "^7.5.5"
   },
   "dependencies": {
+    "babel": "^6.23.0",
     "chalk": "^2.4.2",
     "dotenv": "^8.0.0",
     "eth-provider": "^0.2.2",
