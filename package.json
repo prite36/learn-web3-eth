@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon lib/index.js --exec babel-node",
     "build": "babel lib -d dist",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run build && nodemon dist/index.js",
-    "serve": "node dist/index.js",
-    "dev": "nodemon --exec babel-node index"
+    "serve": "node d  ist/index.js",
+    "test": "mocha --require @babel/register"
   },
   "author": "",
   "license": "ISC",
@@ -17,7 +16,9 @@
     "@babel/core": "^7.5.5",
     "@babel/node": "^7.5.5",
     "@babel/plugin-transform-async-to-generator": "^7.5.0",
-    "@babel/preset-env": "^7.5.5"
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
+    "mocha": "^6.2.0"
   },
   "dependencies": {
     "chalk": "^2.4.2",
