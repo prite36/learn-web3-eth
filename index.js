@@ -38,6 +38,7 @@ router.get('/transactionsHistory/:myAddress', async ctx => {
     }
 })
 app.use(cors())
+app.use(serve(path.join(__dirname,'public')));
 app.use(router.routes())
 app.listen(port, () => {
     console.log(`listening on port ${port} ...`)
